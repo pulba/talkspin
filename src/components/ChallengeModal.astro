@@ -160,7 +160,7 @@ import topics from '../data/topics.json';
           id="btn-speaking-finish"
           class="px-8 py-3 rounded-full bg-primary hover:bg-accent text-white font-bold text-sm tracking-wider uppercase transition-all duration-200 cursor-pointer"
         >
-          Selesai Bicara
+          Selesai
         </button>
       </div>
     </div>
@@ -201,7 +201,7 @@ import topics from '../data/topics.json';
         <button
           type="button"
           id="btn-spin-again"
-          class="px-10 py-4 rounded-full bg-primary hover:bg-accent text-white font-bold text-sm tracking-wider uppercase transition-all duration-200 shadow-hairline cursor-pointer"
+          class="px-8 py-3.5 rounded-full bg-primary hover:bg-accent text-white font-bold text-sm tracking-wider uppercase transition-all duration-200 cursor-pointer"
         >
           Spin Lagi &rarr;
         </button>
@@ -210,7 +210,11 @@ import topics from '../data/topics.json';
   </div>
 </div>
 
-<script define:vars={{ allTopics: topics }}>
+<script>
+  import { sounds } from '../utils/sounds.js';
+  import topics from '../data/topics.json';
+
+  const allTopics = topics;
   const modal = document.getElementById("challenge-modal");
   const closeBtn = document.getElementById("modal-close-btn");
   const stateReveal = document.getElementById("modal-state-reveal");
@@ -327,13 +331,17 @@ import topics from '../data/topics.json';
     prepSeconds = 30;
     prepTimerDisplay.textContent = formatTime(prepSeconds);
     showState("PREP");
+    sounds.playTimerTick(false);
 
     clearInterval(timerInterval);
     timerInterval = setInterval(() => {
       prepSeconds--;
       prepTimerDisplay.textContent = formatTime(prepSeconds);
-      if (prepSeconds <= 0) {
+      if (prepSeconds > 0) {
+        sounds.playTimerTick(prepSeconds <= 5);
+      } else {
         clearInterval(timerInterval);
+        sounds.playFinishChime();
         startSpeaking();
       }
     }, 1000);
@@ -347,6 +355,7 @@ import topics from '../data/topics.json';
   // Skip prep button
   btnSkipPrep.addEventListener("click", () => {
     clearInterval(timerInterval);
+    sounds.playTimerTick(false);
     startSpeaking();
   });
 
@@ -358,6 +367,7 @@ import topics from '../data/topics.json';
     speakingTimerDisplay.textContent = formatTime(speakingSeconds);
     speakingTimerDisplay.classList.remove("text-accent");
     showState("SPEAKING");
+    sounds.playTimerTick(false);
 
     clearInterval(timerInterval);
     timerInterval = setInterval(() => {
@@ -370,9 +380,13 @@ import topics from '../data/topics.json';
 
         if (speakingSeconds <= 10) {
           speakingTimerDisplay.classList.add("text-accent");
+          sounds.playTimerTick(speakingSeconds <= 5);
+        } else {
+          sounds.playTimerTick(false);
         }
       } else {
         clearInterval(timerInterval);
+        sounds.playFinishChime();
         finishSpeaking();
       }
     }, 1000);
@@ -387,6 +401,7 @@ import topics from '../data/topics.json';
   // Finish speaking early
   btnSpeakingFinish.addEventListener("click", () => {
     clearInterval(timerInterval);
+    sounds.playFinishChime();
     finishSpeaking();
   });
 

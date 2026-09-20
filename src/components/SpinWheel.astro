@@ -49,10 +49,14 @@ const categories = Array.from(new Set(topics.map((t) => t.category)));
   </div>
 </div>
 
-<script define:vars={{ categoriesList: categories, allTopics: topics }}>
+<script>
+  import { sounds } from '../utils/sounds.js';
+  import topics from '../data/topics.json';
+
   const canvas = document.getElementById("spin-canvas");
   const ctx = canvas.getContext("2d");
   const spinBtn = document.getElementById("center-spin-btn");
+  const categoriesList = Array.from(new Set(topics.map((t) => t.category)));
   const numSlices = categoriesList.length;
   const sliceAngle = (2 * Math.PI) / numSlices;
   const size = 540;
@@ -107,10 +111,10 @@ const categories = Array.from(new Set(topics.map((t) => t.category)));
       ctx.rotate(angle + sliceAngle / 2);
       ctx.textAlign = "right";
       ctx.fillStyle = "#111111";
-      ctx.font = "bold 13px 'Inter', sans-serif";
+      ctx.font = "bold 11px 'Inter', sans-serif";
       
       const text = categoriesList[i];
-      ctx.fillText(text, radius - 24, 5);
+      ctx.fillText(text, radius - 20, 4);
       ctx.restore();
 
       // Small outer pin dot
@@ -144,6 +148,9 @@ const categories = Array.from(new Set(topics.map((t) => t.category)));
     spinBtn.disabled = true;
     spinBtn.classList.add("opacity-70");
 
+    // Start spin sound effect
+    sounds.playSpinSequence(4500);
+
     // Random rotations: at least 5 full turns (1800 deg) + random angle
     const extraRounds = 5 + Math.floor(Math.random() * 4);
     const randomDegree = Math.floor(Math.random() * 360);
@@ -158,6 +165,9 @@ const categories = Array.from(new Set(topics.map((t) => t.category)));
       isSpinning = false;
       spinBtn.disabled = false;
       spinBtn.classList.remove("opacity-70");
+
+      // Play winning chime
+      sounds.playWinChime();
 
       // Pointer is on the RIGHT side (0 rad / 0 deg in canvas space)
       const actualDegrees = currentRotation % 360;
