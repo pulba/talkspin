@@ -1,0 +1,92 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  url?: string;
+}
+
+const {
+  title = "TalkSpin — Spin. Think. Speak. | Latihan Berbicara Spontan",
+  description = "TalkSpin adalah aplikasi latihan berbicara spontan untuk siswa dan guru. Putar roda topik acak, latih keberanian berpikir cepat, dan sampaikan pendapat secara terstruktur.",
+  image = "/og-image.jpg",
+  url = "https://talkspin.app"
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, url);
+const ogImageURL = new URL(image, url);
+
+// Structured data for Google Search
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "TalkSpin",
+  "url": url,
+  "description": description,
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "IDR"
+  },
+  "audience": {
+    "@type": "EducationalAudience",
+    "educationalRole": "student"
+  }
+};
+---
+
+<!doctype html>
+<html lang="id" class="h-full scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Standard SEO -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="talkspin, latihan bicara spontan, public speaking siswa, spin wheel topik, speaking exercise, diskusi kelas, belajar bicara, kurikulum merdeka" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="author" content="TalkSpin" />
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="theme-color" content="#ff5a36" />
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn, etc.) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="TalkSpin" />
+    <meta property="og:locale" content="id_ID" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <!-- JSON-LD Structured Data for Google -->
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body class="min-h-full flex flex-col bg-background text-body font-body antialiased selection:bg-accent-light selection:text-accent">
+    <slot />
+  </body>
+</html>

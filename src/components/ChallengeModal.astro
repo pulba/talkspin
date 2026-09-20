@@ -1,0 +1,413 @@
+---
+// src/components/ChallengeModal.astro
+import topics from '../data/topics.json';
+---
+
+<!-- Modal Backdrop -->
+<div
+  id="challenge-modal"
+  class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 bg-heading/60 backdrop-blur-sm transition-opacity duration-200"
+  role="dialog"
+  aria-modal="true"
+>
+  <!-- Modal Card -->
+  <div
+    class="relative w-full max-w-2xl bg-surface border border-border rounded-[20px] shadow-2xl p-6 sm:p-10 flex flex-col justify-between max-h-[92vh] overflow-y-auto"
+  >
+    <!-- Close Button Top Right -->
+    <button
+      type="button"
+      id="modal-close-btn"
+      class="absolute top-5 right-5 w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted hover:text-heading hover:border-heading transition-colors cursor-pointer"
+      aria-label="Tutup modal"
+    >
+      &times;
+    </button>
+
+    <!-- State 1: TOPIC_REVEALED -->
+    <div id="modal-state-reveal" class="space-y-6">
+      <div class="flex items-center gap-2 text-xs uppercase tracking-[0.14em] font-semibold text-muted">
+        <span class="w-2.5 h-2.5 rounded-full bg-accent"></span>
+        <span id="modal-category">Kategori</span>
+        <span>&bull;</span>
+        <span id="modal-level">Level</span>
+      </div>
+
+      <blockquote
+        id="modal-topic-text"
+        class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-heading leading-snug"
+      >
+        “Memuat topik...”
+      </blockquote>
+
+      <!-- Brain Boost (Collapsible) -->
+      <div class="border border-border rounded-[12px] p-4 bg-background">
+        <button
+          type="button"
+          id="modal-boost-toggle"
+          class="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-muted hover:text-accent cursor-pointer"
+        >
+          <span>Bantuan Berpikir (Brain Boost)</span>
+          <span id="modal-boost-arrow">&darr;</span>
+        </button>
+        <ul id="modal-boost-list" class="hidden mt-3 space-y-2 text-xs sm:text-sm text-body">
+          <!-- Injected via JS -->
+        </ul>
+      </div>
+
+      <!-- Duration Selection -->
+      <div class="flex items-center justify-between border-t border-border pt-4 text-xs">
+        <span class="font-semibold text-muted uppercase tracking-wider">Durasi Bicara:</span>
+        <select
+          id="modal-duration-select"
+          class="bg-surface border border-border rounded-full px-3.5 py-1.5 font-semibold text-heading focus:outline-none focus:border-heading cursor-pointer"
+        >
+          <option value="60">1 Menit</option>
+          <option value="120" selected>2 Menit</option>
+          <option value="180">3 Menit</option>
+          <option value="300">5 Menit</option>
+        </select>
+      </div>
+
+      <!-- 2 Main Action Buttons Required by User -->
+      <div class="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <!-- Button 1: Persiapan (30 detik) -->
+        <button
+          type="button"
+          id="btn-persiapan"
+          class="w-full py-3.5 px-6 rounded-full bg-surface border-2 border-primary hover:border-accent text-primary hover:text-accent font-bold text-sm tracking-wide uppercase transition-all duration-200 cursor-pointer flex items-center justify-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Persiapan (30s)</span>
+        </button>
+
+        <!-- Button 2: Mulai Bicara -->
+        <button
+          type="button"
+          id="btn-mulai"
+          class="w-full py-3.5 px-6 rounded-full bg-primary hover:bg-accent text-white font-bold text-sm tracking-wide uppercase transition-all duration-200 shadow-hairline cursor-pointer flex items-center justify-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+          </svg>
+          <span>Mulai Bicara</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- State 2: PREPARATION TIMER (30 Detik) -->
+    <div id="modal-state-prep" class="hidden space-y-6 text-center py-4">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-border bg-background text-xs font-semibold uppercase tracking-[0.14em] text-heading">
+        <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+        <span>WAKTU PERSIAPAN</span>
+      </div>
+
+      <div
+        id="prep-timer-display"
+        class="font-mono text-7xl sm:text-8xl font-bold tracking-tighter text-heading select-none tabular-nums"
+      >
+        00:30
+      </div>
+
+      <div class="text-sm text-muted max-w-sm mx-auto space-y-1">
+        <p class="font-semibold text-heading">Susun struktur di kepalamu:</p>
+        <p>1. Opinimu &bull; 2. Alasannya &bull; 3. Contoh konkret</p>
+      </div>
+
+      <div class="pt-4">
+        <button
+          type="button"
+          id="btn-skip-prep"
+          class="px-8 py-3.5 rounded-full bg-primary hover:bg-accent text-white font-bold text-sm tracking-wider uppercase transition-all duration-200 cursor-pointer shadow-hairline"
+        >
+          Saya Siap &bull; Mulai Bicara &rarr;
+        </button>
+      </div>
+    </div>
+
+    <!-- State 3: SPEAKING TIMER -->
+    <div id="modal-state-speaking" class="hidden space-y-6 text-center py-4">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-accent/40 bg-accent-light text-xs font-bold uppercase tracking-[0.14em] text-accent">
+        <span class="w-2 h-2 rounded-full bg-accent"></span>
+        <span>WAKTU BICARA</span>
+      </div>
+
+      <div
+        id="speaking-timer-display"
+        class="font-mono text-7xl sm:text-8xl font-bold tracking-tighter text-heading select-none tabular-nums"
+      >
+        02:00
+      </div>
+
+      <!-- Quick prompts reminder -->
+      <div id="speaking-topic-quote" class="text-sm font-semibold text-muted italic max-w-md mx-auto">
+        <!-- Topic prompt shown in small text -->
+      </div>
+
+      <div class="flex items-center justify-center gap-4 pt-2">
+        <button
+          type="button"
+          id="btn-speaking-pause"
+          class="px-6 py-3 rounded-full bg-surface border border-border hover:border-heading text-heading font-semibold text-sm transition-colors cursor-pointer"
+        >
+          Jeda
+        </button>
+
+        <button
+          type="button"
+          id="btn-speaking-finish"
+          class="px-8 py-3 rounded-full bg-primary hover:bg-accent text-white font-bold text-sm tracking-wider uppercase transition-all duration-200 cursor-pointer"
+        >
+          Selesai Bicara
+        </button>
+      </div>
+    </div>
+
+    <!-- State 4: COMPLETED SUMMARY -->
+    <div id="modal-state-done" class="hidden space-y-6 text-center py-4">
+      <div class="w-12 h-12 rounded-full bg-accent-light text-accent flex items-center justify-center mx-auto text-xl font-bold">
+        ✓
+      </div>
+
+      <h3 class="text-3xl font-bold text-heading">Latihan Tuntas!</h3>
+      <p class="text-sm text-muted max-w-md mx-auto" id="done-summary-text">
+        Kamu berhasil berbicara selama <span id="done-time-spent" class="font-bold text-heading">2 menit</span>.
+      </p>
+
+      <!-- Rating Evaluation -->
+      <div class="bg-background border border-border rounded-[14px] p-5 max-w-md mx-auto text-left space-y-3">
+        <div class="text-xs font-bold uppercase tracking-wider text-heading">Evaluasi Singkat:</div>
+        <div class="flex items-center justify-between text-xs">
+          <span>Kepercayaan Diri:</span>
+          <div class="flex gap-1">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <span class="text-accent text-sm">★</span>
+            ))}
+          </div>
+        </div>
+        <div class="flex items-center justify-between text-xs">
+          <span>Kelancaran Ide:</span>
+          <div class="flex gap-1">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <span class="text-accent text-sm">★</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 flex justify-center">
+        <button
+          type="button"
+          id="btn-spin-again"
+          class="px-10 py-4 rounded-full bg-primary hover:bg-accent text-white font-bold text-sm tracking-wider uppercase transition-all duration-200 shadow-hairline cursor-pointer"
+        >
+          Spin Lagi &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ allTopics: topics }}>
+  const modal = document.getElementById("challenge-modal");
+  const closeBtn = document.getElementById("modal-close-btn");
+  const stateReveal = document.getElementById("modal-state-reveal");
+  const statePrep = document.getElementById("modal-state-prep");
+  const stateSpeaking = document.getElementById("modal-state-speaking");
+  const stateDone = document.getElementById("modal-state-done");
+
+  const categoryEl = document.getElementById("modal-category");
+  const levelEl = document.getElementById("modal-level");
+  const topicTextEl = document.getElementById("modal-topic-text");
+  const durationSelect = document.getElementById("modal-duration-select");
+  const boostToggle = document.getElementById("modal-boost-toggle");
+  const boostList = document.getElementById("modal-boost-list");
+  const boostArrow = document.getElementById("modal-boost-arrow");
+
+  const btnPersiapan = document.getElementById("btn-persiapan");
+  const btnMulai = document.getElementById("btn-mulai");
+  const btnSkipPrep = document.getElementById("btn-skip-prep");
+  const btnSpeakingPause = document.getElementById("btn-speaking-pause");
+  const btnSpeakingFinish = document.getElementById("btn-speaking-finish");
+  const btnSpinAgain = document.getElementById("btn-spin-again");
+
+  const prepTimerDisplay = document.getElementById("prep-timer-display");
+  const speakingTimerDisplay = document.getElementById("speaking-timer-display");
+  const speakingTopicQuote = document.getElementById("speaking-topic-quote");
+  const doneTimeSpent = document.getElementById("done-time-spent");
+
+  let currentTopic = null;
+  let timerInterval = null;
+  let prepSeconds = 30;
+  let speakingSeconds = 120;
+  let isPaused = false;
+  let timeSpent = 0;
+
+  function formatTime(s) {
+    const mins = Math.floor(s / 60);
+    const secs = s % 60;
+    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  }
+
+  function showState(stateName) {
+    stateReveal.classList.toggle("hidden", stateName !== "REVEAL");
+    statePrep.classList.toggle("hidden", stateName !== "PREP");
+    stateSpeaking.classList.toggle("hidden", stateName !== "SPEAKING");
+    stateDone.classList.toggle("hidden", stateName !== "DONE");
+  }
+
+  function openModalWithTopic(topic) {
+    currentTopic = topic;
+    categoryEl.textContent = topic.category;
+    levelEl.textContent = topic.level === "easy" ? "Mudah" : topic.level === "hard" ? "Tantangan" : "Sedang";
+    topicTextEl.textContent = `“${topic.topic}”`;
+    speakingTopicQuote.textContent = `“${topic.topic}”`;
+
+    // Populate brain boost
+    if (topic.brainBoost) {
+      boostList.innerHTML = topic.brainBoost
+        .map((p) => `<li class="flex items-start gap-2"><span class="text-accent font-bold">&bull;</span><span>${p}</span></li>`)
+        .join("");
+    }
+
+    showState("REVEAL");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+  }
+
+  function closeModal() {
+    clearInterval(timerInterval);
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }
+
+  // Listen to spin wheel winner event
+  window.addEventListener("talkspin:winner", (e) => {
+    const category = e.detail.category;
+    // Filter topics by category
+    const pool = allTopics.filter((t) => t.category === category);
+    
+    // Get seen topics for this category from session storage
+    const storageKey = `talkspin_seen_${category}`;
+    let seenTopicIds = JSON.parse(sessionStorage.getItem(storageKey) || "[]");
+
+    // Filter unseen topics
+    let unseenPool = pool.filter(t => !seenTopicIds.includes(t.id));
+
+    // If all topics in this category have been seen, reset the seen list
+    if (unseenPool.length === 0 && pool.length > 0) {
+      unseenPool = pool;
+      seenTopicIds = [];
+    }
+
+    const chosen = unseenPool.length > 0
+      ? unseenPool[Math.floor(Math.random() * unseenPool.length)]
+      : allTopics[Math.floor(Math.random() * allTopics.length)];
+
+    // Mark as seen
+    if (chosen && chosen.category === category) {
+      seenTopicIds.push(chosen.id);
+      sessionStorage.setItem(storageKey, JSON.stringify(seenTopicIds));
+    }
+
+    openModalWithTopic(chosen);
+  });
+
+  // Brain boost toggle
+  boostToggle.addEventListener("click", () => {
+    const isHidden = boostList.classList.contains("hidden");
+    boostList.classList.toggle("hidden", !isHidden);
+    boostArrow.textContent = isHidden ? "↑" : "↓";
+  });
+
+  // State 1: Click "Persiapan" (30 detik)
+  btnPersiapan.addEventListener("click", () => {
+    prepSeconds = 30;
+    prepTimerDisplay.textContent = formatTime(prepSeconds);
+    showState("PREP");
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      prepSeconds--;
+      prepTimerDisplay.textContent = formatTime(prepSeconds);
+      if (prepSeconds <= 0) {
+        clearInterval(timerInterval);
+        startSpeaking();
+      }
+    }, 1000);
+  });
+
+  // State 1: Click "Mulai Bicara" directly
+  btnMulai.addEventListener("click", () => {
+    startSpeaking();
+  });
+
+  // Skip prep button
+  btnSkipPrep.addEventListener("click", () => {
+    clearInterval(timerInterval);
+    startSpeaking();
+  });
+
+  function startSpeaking() {
+    speakingSeconds = parseInt(durationSelect.value, 10) || 120;
+    timeSpent = 0;
+    isPaused = false;
+    btnSpeakingPause.textContent = "Jeda";
+    speakingTimerDisplay.textContent = formatTime(speakingSeconds);
+    speakingTimerDisplay.classList.remove("text-accent");
+    showState("SPEAKING");
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      if (isPaused) return;
+
+      if (speakingSeconds > 0) {
+        speakingSeconds--;
+        timeSpent++;
+        speakingTimerDisplay.textContent = formatTime(speakingSeconds);
+
+        if (speakingSeconds <= 10) {
+          speakingTimerDisplay.classList.add("text-accent");
+        }
+      } else {
+        clearInterval(timerInterval);
+        finishSpeaking();
+      }
+    }, 1000);
+  }
+
+  // Pause / Resume speaking
+  btnSpeakingPause.addEventListener("click", () => {
+    isPaused = !isPaused;
+    btnSpeakingPause.textContent = isPaused ? "Lanjut" : "Jeda";
+  });
+
+  // Finish speaking early
+  btnSpeakingFinish.addEventListener("click", () => {
+    clearInterval(timerInterval);
+    finishSpeaking();
+  });
+
+  function finishSpeaking() {
+    const mins = Math.floor(timeSpent / 60);
+    const secs = timeSpent % 60;
+    doneTimeSpent.textContent = mins > 0 ? `${mins} menit ${secs} detik` : `${secs} detik`;
+    showState("DONE");
+  }
+
+  // Spin again button
+  btnSpinAgain.addEventListener("click", () => {
+    closeModal();
+  });
+
+  closeBtn.addEventListener("click", closeModal);
+
+  // Close on outside backdrop click
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+</script>

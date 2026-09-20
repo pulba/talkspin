@@ -1,0 +1,182 @@
+---
+// src/components/SpinWheel.astro
+import topics from '../data/topics.json';
+
+// Unique categories
+const categories = Array.from(new Set(topics.map((t) => t.category)));
+---
+
+<div class="relative flex flex-col items-center justify-center select-none" id="wheel-wrapper">
+  <!-- Wheel Canvas Container -->
+  <div class="relative w-[340px] h-[340px] sm:w-[480px] sm:h-[480px] md:w-[540px] md:h-[540px] flex items-center justify-center">
+    
+    <!-- Pointer on the right pointing LEFT towards wheel center -->
+    <div
+      class="absolute -right-2 sm:-right-3 z-30 flex items-center pointer-events-none drop-shadow-md"
+      id="wheel-pointer"
+    >
+      <svg width="32" height="32" viewBox="0 0 32 32" class="fill-accent">
+        <!-- Triangle pointing LEFT (towards wheel) -->
+        <polygon points="4,16 30,3 30,29" />
+      </svg>
+    </div>
+
+    <!-- Outer Decorative Rim -->
+    <div class="absolute inset-0 rounded-full border-4 border-heading/10 shadow-xl pointer-events-none z-20"></div>
+
+    <!-- Canvas Wheel -->
+    <canvas
+      id="spin-canvas"
+      width="540"
+      height="540"
+      class="w-full h-full rounded-full cursor-pointer relative z-10 transition-transform duration-[4500ms] cubic-bezier(0.15, 0.9, 0.2, 1)"
+    ></canvas>
+
+    <!-- Center Hub Button (SPIN with Logo) -->
+    <button
+      type="button"
+      id="center-spin-btn"
+      class="absolute z-30 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-surface hover:bg-accent-light text-heading font-bold text-xs sm:text-sm tracking-wider uppercase flex flex-col items-center justify-center shadow-2xl transition-all duration-200 cursor-pointer active:scale-95 border-4 border-heading/10 p-1 group"
+      aria-label="Spin the wheel"
+    >
+      <img
+        src="/favicon.png"
+        alt="TalkSpin"
+        class="w-10 h-10 sm:w-12 sm:h-12 object-contain transition-transform duration-200 group-hover:scale-105 select-none"
+      />
+      <span class="text-[10px] sm:text-xs font-extrabold tracking-widest text-heading mt-0.5">SPIN</span>
+    </button>
+  </div>
+</div>
+
+<script define:vars={{ categoriesList: categories, allTopics: topics }}>
+  const canvas = document.getElementById("spin-canvas");
+  const ctx = canvas.getContext("2d");
+  const spinBtn = document.getElementById("center-spin-btn");
+  const numSlices = categoriesList.length;
+  const sliceAngle = (2 * Math.PI) / numSlices;
+  const size = 540;
+  const center = size / 2;
+  const radius = center - 14;
+
+  // Brighter, cheerful palette (similar to reference wheel)
+  const colors = [
+    "#FCA5A5", // coral pink
+    "#C4B5FD", // soft lilac
+    "#93C5FD", // sky blue
+    "#FDE047", // sunny yellow
+    "#86EFAC", // mint green
+    "#FDBA74", // soft orange
+    "#F472B6", // pink
+    "#6EE7B7", // emerald light
+    "#A5B4FC", // periwinkle
+    "#FCD34D", // amber
+    "#67E8F9", // cyan
+    "#FDA4AF", // rose
+    "#C084FC", // violet
+    "#818CF8", // indigo
+    "#4ADE80", // green
+    "#FB923C", // orange
+    "#38BDF8", // light blue
+    "#E879F9", // fuchsia
+    "#A7F3D0", // teal light
+    "#FED7AA"  // peach
+  ];
+
+  function drawWheel() {
+    ctx.clearRect(0, 0, size, size);
+
+    for (let i = 0; i < numSlices; i++) {
+      const angle = i * sliceAngle;
+
+      // Slice sector
+      ctx.beginPath();
+      ctx.moveTo(center, center);
+      ctx.arc(center, center, radius, angle, angle + sliceAngle);
+      ctx.fillStyle = colors[i % colors.length];
+      ctx.fill();
+
+      // Border between slices
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Text label
+      ctx.save();
+      ctx.translate(center, center);
+      ctx.rotate(angle + sliceAngle / 2);
+      ctx.textAlign = "right";
+      ctx.fillStyle = "#111111";
+      ctx.font = "bold 13px 'Inter', sans-serif";
+      
+      const text = categoriesList[i];
+      ctx.fillText(text, radius - 24, 5);
+      ctx.restore();
+
+      // Small outer pin dot
+      const pinAngle = angle;
+      const pinX = center + (radius + 2) * Math.cos(pinAngle);
+      const pinY = center + (radius + 2) * Math.sin(pinAngle);
+      ctx.beginPath();
+      ctx.arc(pinX, pinY, 3, 0, 2 * Math.PI);
+      ctx.fillStyle = "#475569";
+      ctx.fill();
+    }
+  }
+
+  // Draw immediately
+  drawWheel();
+
+  // Redraw if font finishes loading
+  if (document.fonts) {
+    document.fonts.ready.then(() => {
+      drawWheel();
+    });
+  }
+
+  // Spin Logic
+  let currentRotation = 0;
+  let isSpinning = false;
+
+  function spinWheel() {
+    if (isSpinning) return;
+    isSpinning = true;
+    spinBtn.disabled = true;
+    spinBtn.classList.add("opacity-70");
+
+    // Random rotations: at least 5 full turns (1800 deg) + random angle
+    const extraRounds = 5 + Math.floor(Math.random() * 4);
+    const randomDegree = Math.floor(Math.random() * 360);
+    const totalAddedRotation = extraRounds * 360 + randomDegree;
+    currentRotation += totalAddedRotation;
+
+    // Apply CSS rotation to canvas
+    canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+    // When spin finishes
+    setTimeout(() => {
+      isSpinning = false;
+      spinBtn.disabled = false;
+      spinBtn.classList.remove("opacity-70");
+
+      // Pointer is on the RIGHT side (0 rad / 0 deg in canvas space)
+      const actualDegrees = currentRotation % 360;
+      const landingAngleDeg = (360 - actualDegrees) % 360;
+      const sliceDeg = 360 / numSlices;
+      const winningIndex = Math.floor(landingAngleDeg / sliceDeg) % numSlices;
+      const winningCategory = categoriesList[winningIndex];
+
+      // Dispatch custom event to trigger popup
+      window.dispatchEvent(
+        new CustomEvent("talkspin:winner", {
+          detail: {
+            category: winningCategory
+          }
+        })
+      );
+    }, 4600);
+  }
+
+  spinBtn.addEventListener("click", spinWheel);
+  canvas.addEventListener("click", spinWheel);
+</script>

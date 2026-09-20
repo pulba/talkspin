@@ -1,0 +1,18 @@
+---
+// src/pages/index.astro
+import Layout from '../layouts/Layout.astro';
+import SpinWheel from '../components/SpinWheel.astro';
+import ChallengeModal from '../components/ChallengeModal.astro';
+---
+
+<Layout title="TalkSpin — Spin. Think. Speak.">
+  <main class="min-h-screen w-full flex flex-col justify-center items-center p-4 bg-background overflow-hidden">
+    <!-- Direct Wheel Focus (Clean, No Clutter) -->
+    <div class="flex items-center justify-center">
+      <SpinWheel />
+    </div>
+  </main>
+
+  <!-- Single Screen Popup Modal -->
+  <ChallengeModal />
+</Layout>
