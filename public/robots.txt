@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://talkspin.app/sitemap.xml
+Sitemap: https://talkspin.pages.dev/sitemap-index.xml
