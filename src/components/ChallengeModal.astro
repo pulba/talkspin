@@ -1,6 +1,6 @@
 ---
 // src/components/ChallengeModal.astro
-import topics from '../data/topics.json';
+import topics from "../data/topics.json";
 ---
 
 <!-- Modal Backdrop -->
@@ -26,7 +26,9 @@ import topics from '../data/topics.json';
 
     <!-- State 1: TOPIC_REVEALED -->
     <div id="modal-state-reveal" class="space-y-6">
-      <div class="flex items-center gap-2 text-xs uppercase tracking-[0.14em] font-semibold text-muted">
+      <div
+        class="flex items-center gap-2 text-xs uppercase tracking-[0.14em] font-semibold text-muted"
+      >
         <span class="w-2.5 h-2.5 rounded-full bg-accent"></span>
         <span id="modal-category">Kategori</span>
         <span>&bull;</span>
@@ -35,7 +37,7 @@ import topics from '../data/topics.json';
 
       <blockquote
         id="modal-topic-text"
-        class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-heading leading-snug"
+        class="text-xl text-heading font-bold italic"
       >
         “Memuat topik...”
       </blockquote>
@@ -45,19 +47,26 @@ import topics from '../data/topics.json';
         <button
           type="button"
           id="modal-boost-toggle"
-          class="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-muted hover:text-accent cursor-pointer"
+          class="w-full flex items-center justify-between text-xs font-bold text-muted hover:text-accent cursor-pointer"
         >
           <span>Bantuan Berpikir (Brain Boost)</span>
           <span id="modal-boost-arrow">&darr;</span>
         </button>
-        <ul id="modal-boost-list" class="hidden mt-3 space-y-2 text-xs sm:text-sm text-body">
+        <ul
+          id="modal-boost-list"
+          class="hidden mt-3 space-y-2 text-xs sm:text-sm text-body"
+        >
           <!-- Injected via JS -->
         </ul>
       </div>
 
       <!-- Duration Selection -->
-      <div class="flex items-center justify-between border-t border-border pt-4 text-xs">
-        <span class="font-semibold text-muted uppercase tracking-wider">Durasi Bicara:</span>
+      <div
+        class="flex items-center justify-between border-t border-border pt-4 text-xs"
+      >
+        <span class="font-semibold text-muted uppercase tracking-wider"
+          >Durasi Bicara:</span
+        >
         <select
           id="modal-duration-select"
           class="bg-surface border border-border rounded-full px-3.5 py-1.5 font-semibold text-heading focus:outline-none focus:border-heading cursor-pointer"
@@ -77,8 +86,17 @@ import topics from '../data/topics.json';
           id="btn-persiapan"
           class="w-full py-3.5 px-6 rounded-full bg-surface border-2 border-primary hover:border-accent text-primary hover:text-accent font-bold text-sm tracking-wide uppercase transition-all duration-200 cursor-pointer flex items-center justify-center gap-2"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
           <span>Persiapan (30s)</span>
         </button>
@@ -89,8 +107,18 @@ import topics from '../data/topics.json';
           id="btn-mulai"
           class="w-full py-3.5 px-6 rounded-full bg-primary hover:bg-accent text-white font-bold text-sm tracking-wide uppercase transition-all duration-200 shadow-hairline cursor-pointer flex items-center justify-center gap-2"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+            ></path>
           </svg>
           <span>Mulai Bicara</span>
         </button>
@@ -99,7 +127,9 @@ import topics from '../data/topics.json';
 
     <!-- State 2: PREPARATION TIMER (30 Detik) -->
     <div id="modal-state-prep" class="hidden space-y-6 text-center py-4">
-      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-border bg-background text-xs font-semibold uppercase tracking-[0.14em] text-heading">
+      <div
+        class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-border bg-background text-xs font-semibold uppercase tracking-[0.14em] text-heading"
+      >
         <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
         <span>WAKTU PERSIAPAN</span>
       </div>
@@ -129,7 +159,9 @@ import topics from '../data/topics.json';
 
     <!-- State 3: SPEAKING TIMER -->
     <div id="modal-state-speaking" class="hidden space-y-6 text-center py-4">
-      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-accent/40 bg-accent-light text-xs font-bold uppercase tracking-[0.14em] text-accent">
+      <div
+        class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-accent/40 bg-accent-light text-xs font-bold uppercase tracking-[0.14em] text-accent"
+      >
         <span class="w-2 h-2 rounded-full bg-accent"></span>
         <span>WAKTU BICARA</span>
       </div>
@@ -142,8 +174,25 @@ import topics from '../data/topics.json';
       </div>
 
       <!-- Quick prompts reminder -->
-      <div id="speaking-topic-quote" class="text-sm font-semibold text-muted italic max-w-md mx-auto">
+      <div
+        id="speaking-topic-quote"
+        class="text-sm font-semibold text-muted italic max-w-md mx-auto"
+      >
         <!-- Topic prompt shown in small text -->
+      </div>
+
+      <!-- Mic Indicator & Live Speech Status -->
+      <div
+        id="mic-status-container"
+        class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-border bg-background text-xs text-muted"
+      >
+        <span id="mic-dot" class="w-2 h-2 rounded-full bg-accent animate-pulse"
+        ></span>
+        <span id="mic-status-text">Mendengarkan suara siswa...</span>
+        <span>&bull;</span>
+        <span id="mic-word-count" class="font-mono font-bold text-heading"
+          >0 kata</span
+        >
       </div>
 
       <div class="flex items-center justify-center gap-4 pt-2">
@@ -166,37 +215,88 @@ import topics from '../data/topics.json';
     </div>
 
     <!-- State 4: COMPLETED SUMMARY -->
-    <div id="modal-state-done" class="hidden space-y-6 text-center py-4">
-      <div class="w-12 h-12 rounded-full bg-accent-light text-accent flex items-center justify-center mx-auto text-xl font-bold">
+    <div id="modal-state-done" class="hidden space-y-5 text-center py-4">
+      <div
+        class="w-12 h-12 rounded-full bg-accent-light text-accent flex items-center justify-center mx-auto text-xl font-bold"
+      >
         ✓
       </div>
 
-      <h3 class="text-3xl font-bold text-heading">Latihan Tuntas!</h3>
-      <p class="text-sm text-muted max-w-md mx-auto" id="done-summary-text">
-        Kamu berhasil berbicara selama <span id="done-time-spent" class="font-bold text-heading">2 menit</span>.
-      </p>
+      <div>
+        <h3 class="text-3xl font-bold text-heading">Latihan Tuntas!</h3>
+        <p
+          class="text-sm text-muted max-w-md mx-auto mt-1"
+          id="done-summary-text"
+        >
+          Kamu berhasil berbicara selama <span
+            id="done-time-spent"
+            class="font-bold text-heading">2 menit</span
+          >.
+        </p>
+      </div>
 
-      <!-- Rating Evaluation -->
-      <div class="bg-background border border-border rounded-[14px] p-5 max-w-md mx-auto text-left space-y-3">
-        <div class="text-xs font-bold uppercase tracking-wider text-heading">Evaluasi Singkat:</div>
-        <div class="flex items-center justify-between text-xs">
-          <span>Kepercayaan Diri:</span>
-          <div class="flex gap-1">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <span class="text-accent text-sm">★</span>
-            ))}
-          </div>
-        </div>
-        <div class="flex items-center justify-between text-xs">
-          <span>Kelancaran Ide:</span>
-          <div class="flex gap-1">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <span class="text-accent text-sm">★</span>
-            ))}
-          </div>
+      <!-- Suara Siswa Terdeteksi -->
+      <div class="max-w-md mx-auto text-left space-y-1.5">
+        <div
+          class="flex flex-col sm:flex-row text-xs font-bold uppercase tracking-wider text-heading"
+        >
+          <span>Suara Kamu Terdeteksi:</span>
+          <span id="transcript-stats" class="text-muted font-mono font-normal"
+            >0 kata</span
+          >
         </div>
       </div>
 
+      <!-- Langsung Jawaban Saja -->
+      <div class="max-w-md mx-auto text-left space-y-1.5">
+        <div class="text-xs font-bold uppercase tracking-wider text-muted">
+          Jawaban Ideal:
+        </div>
+        <p
+          id="done-direct-answer"
+          class="text-sm sm:text-base text-body leading-relaxed bg-surface border border-border rounded-[14px] p-4 sm:p-5"
+        >
+          <!-- Injected via JS -->
+        </p>
+      </div>
+
+      <!-- Rating Evaluation Dari Analisis Suara -->
+      <div
+        class="bg-background border border-border rounded-[14px] p-5 max-w-md mx-auto text-left space-y-3"
+      >
+        <div class="text-xs font-bold uppercase tracking-wider text-heading">
+          Evaluasi Berdasarkan Suara:
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-medium text-heading">Kepercayaan Diri:</span>
+            <div id="stars-confidence" class="flex gap-1 text-sm text-accent">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span
+                >★</span
+              >
+            </div>
+          </div>
+          <p
+            id="feedback-confidence"
+            class="text-[11px] text-muted leading-tight"
+          >
+          </p>
+        </div>
+
+        <div class="space-y-1 pt-2 border-t border-border">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-medium text-heading">Kelancaran Ide:</span>
+            <div id="stars-fluency" class="flex gap-1 text-sm text-accent">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span
+                >★</span
+              >
+            </div>
+          </div>
+          <p id="feedback-fluency" class="text-[11px] text-muted leading-tight">
+          </p>
+        </div>
+      </div>
       <div class="pt-4 flex justify-center">
         <button
           type="button"
@@ -211,8 +311,8 @@ import topics from '../data/topics.json';
 </div>
 
 <script>
-  import { sounds } from '../utils/sounds.js';
-  import topics from '../data/topics.json';
+  import { sounds } from "../utils/sounds.js";
+  import topics from "../data/topics.json";
 
   const allTopics = topics;
   const modal = document.getElementById("challenge-modal");
@@ -238,9 +338,43 @@ import topics from '../data/topics.json';
   const btnSpinAgain = document.getElementById("btn-spin-again");
 
   const prepTimerDisplay = document.getElementById("prep-timer-display");
-  const speakingTimerDisplay = document.getElementById("speaking-timer-display");
+  const speakingTimerDisplay = document.getElementById(
+    "speaking-timer-display",
+  );
   const speakingTopicQuote = document.getElementById("speaking-topic-quote");
   const doneTimeSpent = document.getElementById("done-time-spent");
+  const doneDirectAnswer = document.getElementById("done-direct-answer");
+
+  const micStatusContainer = document.getElementById("mic-status-container");
+  const micDot = document.getElementById("mic-dot");
+  const micStatusText = document.getElementById("mic-status-text");
+  const micWordCount = document.getElementById("mic-word-count");
+  const studentTranscriptText = document.getElementById(
+    "student-transcript-text",
+  );
+  const transcriptStats = document.getElementById("transcript-stats");
+  const starsConfidence = document.getElementById("stars-confidence");
+  const starsFluency = document.getElementById("stars-fluency");
+  const feedbackConfidence = document.getElementById("feedback-confidence");
+  const feedbackFluency = document.getElementById("feedback-fluency");
+
+  let recognition = null;
+  let isRecognitionActive = false;
+  let accumulatedTranscript = "";
+  let studentTranscript = "";
+  let speechServiceBlocked = false;
+
+  // Local AudioContext voice detection (works 100% offline in Brave, Chrome, Edge, Firefox)
+  let audioContext = null;
+  let mediaStream = null;
+  let analyser = null;
+  let voiceActiveSeconds = 0;
+  let audioAnimFrame = null;
+
+  const SpeechRecognition =
+    typeof window !== "undefined"
+      ? window.SpeechRecognition || window.webkitSpeechRecognition
+      : null;
 
   let currentTopic = null;
   let timerInterval = null;
@@ -265,14 +399,22 @@ import topics from '../data/topics.json';
   function openModalWithTopic(topic) {
     currentTopic = topic;
     categoryEl.textContent = topic.category;
-    levelEl.textContent = topic.level === "easy" ? "Mudah" : topic.level === "hard" ? "Tantangan" : "Sedang";
+    levelEl.textContent =
+      topic.level === "easy"
+        ? "Mudah"
+        : topic.level === "hard"
+          ? "Tantangan"
+          : "Sedang";
     topicTextEl.textContent = `“${topic.topic}”`;
     speakingTopicQuote.textContent = `“${topic.topic}”`;
 
     // Populate brain boost
     if (topic.brainBoost) {
       boostList.innerHTML = topic.brainBoost
-        .map((p) => `<li class="flex items-start gap-2"><span class="text-accent font-bold">&bull;</span><span>${p}</span></li>`)
+        .map(
+          (p) =>
+            `<li class="flex items-start gap-2"><span class="text-accent font-bold">&bull;</span><span>${p}</span></li>`,
+        )
         .join("");
     }
 
@@ -283,6 +425,7 @@ import topics from '../data/topics.json';
 
   function closeModal() {
     clearInterval(timerInterval);
+    stopRecording();
     modal.classList.add("hidden");
     modal.classList.remove("flex");
   }
@@ -292,13 +435,13 @@ import topics from '../data/topics.json';
     const category = e.detail.category;
     // Filter topics by category
     const pool = allTopics.filter((t) => t.category === category);
-    
+
     // Get seen topics for this category from session storage
     const storageKey = `talkspin_seen_${category}`;
     let seenTopicIds = JSON.parse(sessionStorage.getItem(storageKey) || "[]");
 
     // Filter unseen topics
-    let unseenPool = pool.filter(t => !seenTopicIds.includes(t.id));
+    let unseenPool = pool.filter((t) => !seenTopicIds.includes(t.id));
 
     // If all topics in this category have been seen, reset the seen list
     if (unseenPool.length === 0 && pool.length > 0) {
@@ -306,9 +449,10 @@ import topics from '../data/topics.json';
       seenTopicIds = [];
     }
 
-    const chosen = unseenPool.length > 0
-      ? unseenPool[Math.floor(Math.random() * unseenPool.length)]
-      : allTopics[Math.floor(Math.random() * allTopics.length)];
+    const chosen =
+      unseenPool.length > 0
+        ? unseenPool[Math.floor(Math.random() * unseenPool.length)]
+        : allTopics[Math.floor(Math.random() * allTopics.length)];
 
     // Mark as seen
     if (chosen && chosen.category === category) {
@@ -359,6 +503,283 @@ import topics from '../data/topics.json';
     startSpeaking();
   });
 
+  async function startAudioCapture() {
+    try {
+      if (!mediaStream) {
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
+      }
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        if (!audioContext || audioContext.state === "closed") {
+          audioContext = new AudioCtx();
+        }
+        if (audioContext.state === "suspended") {
+          await audioContext.resume();
+        }
+
+        const source = audioContext.createMediaStreamSource(mediaStream);
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+        analyser.smoothingTimeConstant = 0.3;
+        source.connect(analyser);
+
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        let lastTime = performance.now();
+
+        function detectVoiceVolume(now) {
+          const delta = (now - lastTime) / 1000;
+          lastTime = now;
+
+          if (analyser && !isPaused) {
+            analyser.getByteFrequencyData(dataArray);
+            let sum = 0;
+            for (let i = 0; i < bufferLength; i++) {
+              sum += dataArray[i];
+            }
+            const avg = sum / bufferLength;
+
+            // Human voice sound wave energy threshold
+            if (avg > 10) {
+              voiceActiveSeconds += delta;
+              if (micDot) {
+                micDot.classList.add("bg-success");
+                micDot.classList.remove("bg-accent");
+              }
+              if (micStatusText && !studentTranscript) {
+                micStatusText.textContent = "Suara kamu aktif terdeteksi...";
+              }
+            } else {
+              if (micDot) {
+                micDot.classList.add("bg-accent");
+                micDot.classList.remove("bg-success");
+              }
+            }
+
+            // Estimate words from voice rhythm if browser blocks cloud STT
+            if (speechServiceBlocked || !studentTranscript) {
+              const estimatedWords = Math.round(voiceActiveSeconds * 2.2);
+              if (micWordCount && estimatedWords > 0) {
+                micWordCount.textContent = `~${estimatedWords} kata (suara)`;
+              }
+            }
+          }
+
+          const isSpeakingState = !stateSpeaking.classList.contains("hidden");
+          if (isSpeakingState) {
+            audioAnimFrame = requestAnimationFrame(detectVoiceVolume);
+          }
+        }
+
+        audioAnimFrame = requestAnimationFrame(detectVoiceVolume);
+      }
+    } catch (err) {
+      console.warn("AudioContext microphone error:", err);
+      if (micStatusText)
+        micStatusText.textContent = "Izin mikrofon belum aktif";
+    }
+  }
+
+  function stopAudioCapture() {
+    if (audioAnimFrame) {
+      cancelAnimationFrame(audioAnimFrame);
+      audioAnimFrame = null;
+    }
+    if (mediaStream) {
+      mediaStream.getTracks().forEach((t) => t.stop());
+      mediaStream = null;
+    }
+    if (audioContext && audioContext.state !== "closed") {
+      audioContext.close().catch(() => {});
+      audioContext = null;
+    }
+  }
+
+  function initSpeechRecognition() {
+    if (!SpeechRecognition) return;
+
+    try {
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = "id-ID";
+
+      recognition.onstart = () => {
+        isRecognitionActive = true;
+      };
+
+      recognition.onresult = (event) => {
+        let currentInterim = "";
+        let newFinal = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            newFinal += event.results[i][0].transcript + " ";
+          } else {
+            currentInterim += event.results[i][0].transcript;
+          }
+        }
+        if (newFinal) {
+          accumulatedTranscript += newFinal;
+        }
+        studentTranscript = (accumulatedTranscript + currentInterim).trim();
+        const words = studentTranscript
+          ? studentTranscript.split(/\s+/).filter(Boolean)
+          : [];
+        if (micWordCount) micWordCount.textContent = `${words.length} kata`;
+        if (micStatusText) micStatusText.textContent = "Mendengarkan ucapan...";
+      };
+
+      recognition.onerror = (e) => {
+        console.warn("Speech recognition error:", e.error);
+        if (e.error === "network" || e.error === "service-not-allowed") {
+          // Brave browser blocks Google STT cloud service by default
+          speechServiceBlocked = true;
+          if (micStatusText)
+            micStatusText.textContent =
+              "Deteksi suara lokal aktif (STT online dibatasi browser)";
+        } else if (e.error === "not-allowed") {
+          if (micStatusText)
+            micStatusText.textContent = "Izin mikrofon belum aktif";
+        }
+      };
+
+      recognition.onend = () => {
+        isRecognitionActive = false;
+        const isSpeakingState = !stateSpeaking.classList.contains("hidden");
+        if (isSpeakingState && !isPaused && !speechServiceBlocked) {
+          try {
+            recognition.start();
+          } catch (_) {}
+        }
+      };
+    } catch (err) {
+      console.warn("Init speech recognition failed:", err);
+    }
+  }
+
+  function startRecording() {
+    accumulatedTranscript = "";
+    studentTranscript = "";
+    voiceActiveSeconds = 0;
+    speechServiceBlocked = false;
+
+    if (micWordCount) micWordCount.textContent = "0 kata";
+    if (micStatusText) micStatusText.textContent = "Mendengarkan suara...";
+
+    // 1. Start local mic audio detection (zero server dependency, runs in all browsers including Brave)
+    startAudioCapture();
+
+    // 2. Start browser Web Speech STT if available
+    if (SpeechRecognition && !recognition) {
+      initSpeechRecognition();
+    }
+    if (recognition && !isRecognitionActive) {
+      try {
+        recognition.start();
+      } catch (_) {}
+    }
+  }
+
+  function stopRecording() {
+    if (recognition && isRecognitionActive) {
+      try {
+        recognition.stop();
+      } catch (_) {}
+    }
+    stopAudioCapture();
+  }
+
+  function renderStars(container, count) {
+    if (!container) return;
+    let html = "";
+    for (let i = 1; i <= 5; i++) {
+      if (i <= count) {
+        html += `<span class="text-accent text-sm">★</span>`;
+      } else {
+        html += `<span class="text-border text-sm">★</span>`;
+      }
+    }
+    container.innerHTML = html;
+  }
+
+  function evaluateSpeech(transcript, timeSpentSeconds, voiceSeconds) {
+    let words = transcript.trim()
+      ? transcript.trim().split(/\s+/).filter(Boolean)
+      : [];
+    let isEstimate = false;
+
+    // Fallback to voice active duration if browser blocked speech-to-text
+    if (words.length === 0 && voiceSeconds > 1) {
+      isEstimate = true;
+      const count = Math.round(voiceSeconds * 2.2);
+      words = new Array(Math.max(count, 1)).fill("suara");
+    }
+
+    const totalWords = words.length;
+    const fillers =
+      transcript.match(
+        /\b(e+|eh|anu|apa tuh|apa ya|hmm+|em+|enggak tau|gimana ya)\b/gi,
+      ) || [];
+    const fillerCount = fillers.length;
+
+    let confScore = 1;
+    let confFeedback = "";
+
+    if (totalWords === 0 && voiceSeconds < 1) {
+      confScore = 1;
+      confFeedback =
+        "Belum ada suara terdeteksi. Pastikan mikrofon aktif dan bicara lebih lantang.";
+    } else if (timeSpentSeconds < 15 || totalWords < 15) {
+      confScore = 2;
+      confFeedback =
+        "Durasi suara masih singkat. Latih untuk mempertahankan ritme bicara lebih lama.";
+    } else if (totalWords < 40) {
+      confScore = 3;
+      confFeedback = isEstimate
+        ? `Cukup baik! Vokal terdeteksi selama ${Math.round(voiceSeconds)} detik dengan ritme aktif.`
+        : `Cukup baik (${totalWords} kata). Ada sedikit jeda (${fillerCount} kata pengisi), terus tingkatkan.`;
+    } else if (totalWords < 80) {
+      confScore = 4;
+      confFeedback = `Percaya diri mantap! Bicara aktif selama ${timeSpentSeconds} detik dengan artikulasi jelas.`;
+    } else {
+      confScore = 5;
+      confFeedback = `Luar biasa! Sangat percaya diri, tempo stabil dan konsisten.`;
+    }
+
+    let fluScore = 1;
+    let fluFeedback = "";
+
+    if (totalWords === 0 && voiceSeconds < 1) {
+      fluScore = 1;
+      fluFeedback = "Ide belum sempat diuraikan.";
+    } else if (totalWords < 15) {
+      fluScore = 2;
+      fluFeedback =
+        "Gagasan masih sangat singkat. Tambahkan argumen pendukung dan contoh konkret.";
+    } else if (totalWords < 45) {
+      fluScore = 3;
+      fluFeedback =
+        "Ide dasar tersampaikan. Kembangkan lagi hubungan antara penyebab dan solusi.";
+    } else if (totalWords < 85) {
+      fluScore = 4;
+      fluFeedback = "Alur bicara mengalir runtut dan tempo gagasan cukup luas.";
+    } else {
+      fluScore = 5;
+      fluFeedback = "Ide sangat matang, argumen berkembang utuh dan relevan!";
+    }
+
+    return {
+      totalWords,
+      confScore,
+      confFeedback,
+      fluScore,
+      fluFeedback,
+      isEstimate,
+    };
+  }
+
   function startSpeaking() {
     speakingSeconds = parseInt(durationSelect.value, 10) || 120;
     timeSpent = 0;
@@ -368,6 +789,8 @@ import topics from '../data/topics.json';
     speakingTimerDisplay.classList.remove("text-accent");
     showState("SPEAKING");
     sounds.playTimerTick(false);
+
+    startRecording();
 
     clearInterval(timerInterval);
     timerInterval = setInterval(() => {
@@ -396,6 +819,11 @@ import topics from '../data/topics.json';
   btnSpeakingPause.addEventListener("click", () => {
     isPaused = !isPaused;
     btnSpeakingPause.textContent = isPaused ? "Lanjut" : "Jeda";
+    if (isPaused) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
   });
 
   // Finish speaking early
@@ -405,10 +833,97 @@ import topics from '../data/topics.json';
     finishSpeaking();
   });
 
+  function getDirectAnswer(topic) {
+    if (!topic) return "";
+    if (topic.answer) return topic.answer;
+
+    const t = topic.topic ? topic.topic.trim() : "";
+    let subj = t;
+    subj = subj.replace(
+      /^Ceritakan pandangan atau pengalaman pribadimu mengenai isu\s+/i,
+      "",
+    );
+    subj = subj.replace(
+      /^Menurutmu,\s*apa tantangan atau masalah terbesar terkait\s+/i,
+      "",
+    );
+    subj = subj.replace(/\s+di zaman sekarang\??$/i, "");
+    subj = subj.replace(
+      /^Jika kamu bisa memberikan satu inovasi atau perubahan besar pada\s+/i,
+      "",
+    );
+    subj = subj.replace(/,\s*apa yang akan kamu lakukan\??$/i, "");
+    subj = subj.replace(/^Bagaimana pengaruh nyata dari\s+/i, "");
+    subj = subj.replace(
+      /\s+terhadap pola pikir generasi muda saat ini\??$/i,
+      "",
+    );
+    subj = subj.replace(/^Bagaimana prediksi atau harapanmu tentang\s+/i, "");
+    subj = subj.replace(/\s+dalam 10 tahun ke depan\??$/i, "");
+    subj = subj.replace(/\.?$/, "").trim();
+
+    if (/^Menurutmu.*tantangan atau masalah/i.test(t)) {
+      return `Tantangan terbesarnya adalah kurangnya transparansi regulasi dan minimnya edukasi mendalam mengenai ${subj}. Hal ini paling membebani masyarakat luas serta generasi muda yang belum terlindungi, sehingga solusinya adalah memperketat pengawasan, memperluas literasi kritis, dan memperbaiki regulasi secara bertahap.`;
+    } else if (/^Jika kamu bisa memberikan satu inovasi/i.test(t)) {
+      return `Inovasi yang tepat adalah mengembangkan sistem berbasis teknologi kolaboratif yang membuat tata kelola ${subj} lebih adil dan transparan. Langkah awalnya melalui proyek percontohan (pilot project) skala kecil bersama komunitas terdampak, sambil mengatasi hambatan resistensi kebiasaan lama dan keterbatasan alokasi sumber daya di fase awal.`;
+    } else if (/^Bagaimana pengaruh nyata/i.test(t)) {
+      return `Pengaruh utamanya adalah melatih cara berpikir kritis dan mempercepat adaptasi informasi terkait ${subj}. Namun, perlu dihindari risiko ketergantungan berlebihan dan polarisasi opini di media sosial, dengan cara menjaga disiplin mandiri serta rutin mengevaluasi pemanfaatannya.`;
+    } else if (/^Bagaimana prediksi atau harapanmu/i.test(t)) {
+      return `Dalam 10 tahun ke depan, otomatisasi dan digitalisasi penuh diprediksi akan mengubah total cara kerja ${subj}. Keadaan akan menjadi jauh lebih baik bila diarahkan oleh regulasi yang etis, dan kita harus bersiap dengan mengasah kemampuan adaptif serta integritas sejak dini.`;
+    } else {
+      return `Dinamika mengenai ${subj} sangat memengaruhi produktivitas, interaksi sosial, dan karakter sehari-hari. Pengalaman ini mengajarkan pentingnya disiplin waktu serta manajemen prioritas, di mana keseimbangan antara tanggung jawab dan fleksibilitas menjadi kunci utama.`;
+    }
+  }
+
   function finishSpeaking() {
+    stopRecording();
+
     const mins = Math.floor(timeSpent / 60);
     const secs = timeSpent % 60;
-    doneTimeSpent.textContent = mins > 0 ? `${mins} menit ${secs} detik` : `${secs} detik`;
+    doneTimeSpent.textContent =
+      mins > 0 ? `${mins} menit ${secs} detik` : `${secs} detik`;
+
+    // Evaluasi suara
+    const evalResult = evaluateSpeech(
+      studentTranscript,
+      timeSpent,
+      voiceActiveSeconds,
+    );
+
+    if (studentTranscriptText) {
+      if (studentTranscript.trim()) {
+        studentTranscriptText.textContent = `“${studentTranscript}”`;
+        studentTranscriptText.classList.remove("italic", "text-muted");
+        studentTranscriptText.classList.add("text-body");
+      } else if (voiceActiveSeconds > 1) {
+        studentTranscriptText.textContent = `Suara aktif terdeteksi selama ${Math.round(voiceActiveSeconds)} detik via mikrofon (Browser membatasi transkrip teks otomatis Google).`;
+        studentTranscriptText.classList.remove("italic", "text-muted");
+        studentTranscriptText.classList.add("text-body");
+      } else {
+        studentTranscriptText.textContent =
+          "Tidak ada suara terdeteksi atau izin mikrofon belum aktif.";
+        studentTranscriptText.classList.add("italic", "text-muted");
+        studentTranscriptText.classList.remove("text-body");
+      }
+    }
+
+    if (transcriptStats) {
+      transcriptStats.textContent = evalResult.isEstimate
+        ? `~${evalResult.totalWords} kata (${Math.round(voiceActiveSeconds)}s vokal)`
+        : `${evalResult.totalWords} kata`;
+    }
+
+    renderStars(starsConfidence, evalResult.confScore);
+    if (feedbackConfidence)
+      feedbackConfidence.textContent = evalResult.confFeedback;
+
+    renderStars(starsFluency, evalResult.fluScore);
+    if (feedbackFluency) feedbackFluency.textContent = evalResult.fluFeedback;
+
+    if (currentTopic && doneDirectAnswer) {
+      doneDirectAnswer.textContent = getDirectAnswer(currentTopic);
+    }
+
     showState("DONE");
   }
 
